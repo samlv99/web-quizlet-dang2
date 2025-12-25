@@ -45,6 +45,35 @@
             font-size: 16px;
         }
 
+        .header-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .header-btn {
+            padding: 10px 20px;
+            border: 2px solid white;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .header-btn:hover {
+            background: white;
+            color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
         .progress-bar {
             background: rgba(255, 255, 255, 0.2);
             height: 8px;
@@ -439,6 +468,10 @@
         <div class="header">
             <h1>Đề Cương Ôn Tập Tiếng Trung</h1>
             <p>Chọn đáp án đúng để trả lời câu hỏi</p>
+            <div class="header-buttons">
+                <a href="https://samlv99.github.io/web-quizlet/" class="header-btn" target="_blank">Dạng 1</a>
+                <a href="https://samlv99.github.io/web-quizlet-dang2/" class="header-btn" target="_blank">Dạng 2</a>
+            </div>
             <div class="progress-bar">
                 <div class="progress-fill" id="progressFill"></div>
             </div>
