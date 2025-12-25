@@ -1,0 +1,2745 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đề Cương Ôn Tập Tiếng Trung</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.2);
+            height: 8px;
+            margin-top: 20px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: white;
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .quiz-container {
+            padding: 15px;
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+        }
+
+        .questions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .question-card {
+            display: block;
+            animation: fadeIn 0.5s;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .question-number {
+            color: #667eea;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .option {
+            padding: 18px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            background: #f0f2ff;
+            transform: translateX(5px);
+        }
+
+        .option.selected {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .option.correct {
+            border-color: #28a745;
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .option.correct.selected {
+            background: #28a745;
+            color: white;
+        }
+
+        .option.incorrect {
+            border-color: #dc3545;
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .option.show-correct {
+            border-color: #28a745;
+            background: #d4edda;
+            color: #155724;
+            border-width: 3px;
+        }
+
+        .option input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .option-label {
+            font-size: 16px;
+            flex: 1;
+        }
+
+        .answer-feedback {
+            margin-top: 15px;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .answer-feedback.show {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        .answer-feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #28a745;
+        }
+
+        .answer-feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #dc3545;
+        }
+
+        .correct-answer-label {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #28a745;
+            font-weight: 600;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: center;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #e0e0e0;
+            position: sticky;
+            bottom: 0;
+            background: white;
+            z-index: 10;
+        }
+
+        .btn {
+            padding: 14px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+
+        .btn-prev {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-prev:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-next {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-next:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-submit {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-submit:hover {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .results-container {
+            display: none;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .results-container.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        .results-header {
+            font-size: 32px;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .score {
+            font-size: 48px;
+            font-weight: bold;
+            color: #28a745;
+            margin: 30px 0;
+        }
+
+        .score-info {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 40px;
+        }
+
+        .review-section {
+            margin-top: 40px;
+            text-align: left;
+        }
+
+        .review-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .review-question {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .review-answer {
+            font-size: 14px;
+            color: #666;
+            margin-top: 8px;
+        }
+
+        .review-answer.correct {
+            color: #28a745;
+            font-weight: 600;
+        }
+
+        .review-answer.incorrect {
+            color: #dc3545;
+        }
+
+        .btn-restart {
+            background: #667eea;
+            color: white;
+            margin-top: 0;
+            min-width: 140px;
+            padding: 12px 24px;
+            font-size: 15px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-restart:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-restart:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-restart.btn-wrong {
+            background: #dc3545;
+            box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+        }
+
+        .btn-restart.btn-wrong:hover {
+            background: #c82333;
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            gap: 20px;
+        }
+
+        .question-counter {
+            flex: 1;
+            text-align: left;
+            color: #666;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 15px;
+            background: #f0f2ff;
+            border-radius: 10px;
+        }
+
+        .restart-btn-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 600px) {
+            .restart-btn-container {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .restart-btn-container .btn {
+                width: 100%;
+            }
+        }
+
+        .top-bar {
+            position: sticky;
+            top: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            background: white;
+            z-index: 5;
+            border-bottom: 1px solid #e6e9f0;
+        }
+
+        .quiz-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .quiz-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .quiz-container::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+
+        .quiz-container::-webkit-scrollbar-thumb:hover {
+            background: #5568d3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Đề Cương Ôn Tập Tiếng Trung</h1>
+            <p>Chọn đáp án đúng để trả lời câu hỏi</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <div class="quiz-container" id="quizContainer">
+            <div class="top-bar">
+                <div class="question-counter" id="questionCounter"></div>
+                <div class="restart-btn-container">
+                    <button class="btn btn-restart" onclick="restartFromBeginning()">Làm lại</button>
+                    <button class="btn btn-restart btn-wrong" onclick="restartQuiz()">Câu sai</button>
+                </div>
+            </div>
+            <div class="questions-list" id="questionsContainer"></div>
+        </div>
+
+        <div class="results-container" id="resultsContainer">
+            <h2 class="results-header">Kết Quả</h2>
+            <div class="score" id="scoreDisplay"></div>
+            <div class="score-info" id="scoreInfo"></div>
+            <div class="review-section" id="reviewSection"></div>
+            <div style="display: flex; gap: 15px; justify-content: center; margin-top: 30px;">
+                <button class="btn btn-restart" onclick="restartFromBeginning()">Làm lại</button>
+                <button class="btn btn-restart btn-wrong" onclick="restartQuiz()">Câu sai</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dữ liệu câu hỏi từ PDF
+        const questions = [
+            {
+                id: 1,
+                question: "据考古遗址证实, 距今四十万年的远古时代, 越南土地上已发现了什么?",
+                options: [
+                    "A. 东山文化",
+                    "B. 旧石器时代的遗址",
+                    "C. 人类生活的痕迹",
+                    "D. 水稻种植文明"
+                ],
+                correct: 2 // C
+            },
+            {
+                id: 2,
+                question: "考古学家在越南清化省、福寿省、和平省和谅山省发现了什么?",
+                options: [
+                    "A. 山东文化",
+                    "B. 旧石器时代的遗址（距今 30 万年）",
+                    "C. 种植水稻文明",
+                    "D. 出土文物中最有名的铜鼓"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 3,
+                question: "考古学家在越南北部的一些地区发现了什么?",
+                options: [
+                    "A. 距今一万年旧石器器时代的遗址",
+                    "B. 距今三万年中石器时代的遗址",
+                    "C. 距今一万年中石器时代的遗址",
+                    "D. 距今一万年新石器时代的遗址"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 4,
+                question: "越南历史上第一国家的名称是什么?",
+                options: [
+                    "A. 瓯雉国",
+                    "B. 文郎国",
+                    "C. 大瞿越国",
+                    "D. 大越国"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 5,
+                question: "文郎国以什么文化为代表?",
+                options: [
+                    "A. 东山文化",
+                    "B. 西原文化",
+                    "C. 西北文化",
+                    "D. 南部文化"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 6,
+                question: "最著名的出土文物是什么?",
+                options: [
+                    "A. 水稻",
+                    "B. 铜鼓",
+                    "C. 东山文化遗址",
+                    "D. 畜牧用具"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 7,
+                question: "根据考古遗址，考古学家得出什么结论？",
+                options: [
+                    "A. 石器时代人类已经学会缝纫",
+                    "B. 石器时代人类已经学会畜牧",
+                    "C. 石器时代人类已经学会水稻种植",
+                    "D. 石器时代人类已经掌握畜牧和水稻种植"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 8,
+                question: "文郎国延续了几个世纪，形成了什么时代？",
+                options: [
+                    "A. 陈朝时代",
+                    "B. 黎朝时代",
+                    "C. 李朝时代",
+                    "D. 雄王时代"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 9,
+                question: "公元前 3 世纪，越南被中国封建王朝统治了多久？",
+                options: [
+                    "A. 十多个世纪",
+                    "B. 二十多个世纪",
+                    "C. 三十多个世纪",
+                    "D. 四十多个世纪"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 10,
+                question: "李朝建立的独立国家名称是什么？",
+                options: [
+                    "A. 文郎国",
+                    "B. 瓯雒国",
+                    "C. 大瞿越国",
+                    "D. 大越国"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 11,
+                question: "越南 1010 年的首都名称是什么？",
+                options: [
+                    "A. 河内",
+                    "B. 升龙",
+                    "C. 文郎",
+                    "D. 大越"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 12,
+                question: "19 世纪末，哪个国家对越南进行殖民侵略？",
+                options: [
+                    "A. 英国",
+                    "B. 美国",
+                    "C. 法国",
+                    "D. 日本"
+                ],
+                correct: 2 // C
+            },
+            {
+                id: 13,
+                question: "胡志明主席在哪一年离开祖国，前往海外寻求救国之路？",
+                options: [
+                    "A. 1910 年",
+                    "B. 1911 年",
+                    "C. 1912 年",
+                    "D. 1913 年"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 14,
+                question: "1930 年 2 月 3 日，阮爱国在中国香港进行了什么活动？",
+                options: [
+                    "A. 宣布成立越南社会主义共和国",
+                    "B. 召开会议并成立越南共产党",
+                    "C. 会见外国政府领导人",
+                    "D. 会见越南共产党党员"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 15,
+                question: "1945 年 9 月 2 日，胡志明主席在河内巴亭广场做了什么？",
+                options: [
+                    "A. 召开越南共产党第一届全国代表大会",
+                    "B. 宣读《独立宣言》，宣布成立越南民主共和国",
+                    "C. 离开祖国前往海外寻求救国之路",
+                    "D. 其他"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 16,
+                question: "1976 年，越南改名为什么？",
+                options: [
+                    "A. 越南民主共和国",
+                    "B. 越南社会民主共和国",
+                    "C. 越南主义共和国",
+                    "D. 越南社会主义共和国"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 17,
+                question: "胡志明主席的出生地在哪里？",
+                options: [
+                    "A. 越南中部河静省干禄县",
+                    "B. 越南中部义安省奇山县",
+                    "C. 越南中部义安省南坛县",
+                    "D. 越南中部河静省香山县"
+                ],
+                correct: 2 // C
+            },
+            {
+                id: 18,
+                question: "胡志明 15 岁时在越南哪所学校就读？",
+                options: [
+                    "A. 顺化国立学校",
+                    "B. 河内国子监学校",
+                    "C. 河内陈国粹学校",
+                    "D. 荣市国立学校"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 19,
+                question: "1911 年底，胡志明在法国联合运输公司的商船上工作时，担任什么职位？",
+                options: [
+                    "A. 厨师助手",
+                    "B. 司机助手",
+                    "C. 管理职员",
+                    "D. 办公室职员"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 20,
+                question: "1924 年 12 月中旬，阮爱国在哪里举办越南青年训练班？",
+                options: [
+                    "A. 中国广州",
+                    "B. 法国巴黎",
+                    "C. 苏联莫斯科",
+                    "D. 泰国曼谷"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 21,
+                question: "1941 年2 月8 日，胡志明在哪个省市召集党中央会议？",
+                options: [
+                    "A. 谅山省",
+                    "B. 河江省",
+                    "C. 高平省",
+                    "D. 老街省"
+                ],
+                correct: 2 // C
+            },
+            {
+                id: 22,
+                question: "1945 年8 月13日至 15 日，全国党中央会议在哪个省召开？",
+                options: [
+                    "A. 高平省",
+                    "B. 宣光省",
+                    "C. 莱州省",
+                    "D. 谅山省"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 23,
+                question: "胡志明主席何时代表越南临时政府宣读《独立宣言》？",
+                options: [
+                    "A. 1845年 9月2日",
+                    "B. 1945 年9月5日",
+                    "C. 1940 年9月2日",
+                    "D. 1945 年9月2日"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 24,
+                question: "在越南第一届国会中，胡志明担任了什么职务？",
+                options: [
+                    "A. 越南民主共和国主席兼总书记",
+                    "B. 越南民主共和国主席兼政府总理",
+                    "C. 越南民主共和国主席兼国会主席",
+                    "D. 越南民主共和国主席兼外交部长"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 25,
+                question: "胡志明主席何时去世？",
+                options: [
+                    "A. 1968年 9月2日",
+                    "B. 1968 年9月3日",
+                    "C. 1969 年9月2日",
+                    "D. 1969 年9月3日"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 26,
+                question: "越南位于哪个地区？",
+                options: [
+                    "A. 印度支那半岛东部",
+                    "B. 印度支那半岛西部",
+                    "C. 印度支那半岛南部",
+                    "D. 印度支那半岛北部"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 27,
+                question: "越南属于哪个地区？",
+                options: [
+                    "A. 亚洲地区",
+                    "B. 东北亚地区",
+                    "C. 西亚地区",
+                    "D. 东南亚地区"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 28,
+                question: "越南陆地边界线的总长度是多少？",
+                options: [
+                    "A. 4500 公里",
+                    "B. 4550 公里",
+                    "C. 4600 公里",
+                    "D. 4650 公里"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 29,
+                question: "越南北部与哪个国家接壤？",
+                options: [
+                    "A. 老挝",
+                    "B. 中国",
+                    "C. 柬埔寨",
+                    "D. 日本"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 30,
+                question: "越南西南部与哪些国家接壤？",
+                options: [
+                    "A. 老挝和泰国",
+                    "B. 中国和日本",
+                    "C. 柬埔寨和老挝",
+                    "D. 泰国和中国"
+                ],
+                correct: 2 // C
+            },
+            {
+                id: 31,
+                question: "越南东部和南部临什么？",
+                options: [
+                    "A. 东海",
+                    "B. 北海",
+                    "C. 太平洋",
+                    "D. 印度洋"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 32,
+                question: "越南的形状呈什么形状？",
+                options: [
+                    "A. \"Y\"形",
+                    "B. \"V\"形",
+                    "C. \"J\"形",
+                    "D. \"S\"形"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 33,
+                question: "越南从最南端到最北端的直线距离是多少？",
+                options: [
+                    "A. 1650公里",
+                    "B. 1655 公里",
+                    "C. 1660 公里",
+                    "D. 1665 公里"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 34,
+                question: "越南陆地东西最宽的距离是多少？",
+                options: [
+                    "A. 200公里",
+                    "B. 400 公里",
+                    "C. 600 公里",
+                    "D. 800 公里"
+                ],
+                correct: 2 // C
+            },
+            {
+                id: 35,
+                question: "越南陆地最窄的地方宽度是多少？",
+                options: [
+                    "A. 20公里",
+                    "B. 50 公里",
+                    "C. 70 公里",
+                    "D. 90 公里"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 36,
+                question: "越南地形的特点是什么？",
+                options: [
+                    "A. 四分之一为山地和高原",
+                    "B. 三分之二为山地和高原",
+                    "C. 三分之一为山地和高原",
+                    "D. 四分之三为山地和高原"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 37,
+                question: "越南的地势如何？",
+                options: [
+                    "A. 西北高，东南低",
+                    "B. 西南高，东北低",
+                    "C. 东北高，西南低",
+                    "D. 东南高，西北低"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 38,
+                question: "越南海拔 1000 米以下的地形占多少比例？",
+                options: [
+                    "A. 80%",
+                    "B. 85%",
+                    "C. 90%",
+                    "D. 95%"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 39,
+                question: "越南海拔 2000 米以上的高山占多少比例？",
+                options: [
+                    "A. 1%",
+                    "B. 2%",
+                    "C. 3%",
+                    "D. 4%"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 40,
+                question: "番西邦峰的海拔高度是多少？",
+                options: [
+                    "A. 1143米",
+                    "B. 2143 米",
+                    "C. 3143 米",
+                    "D. 4143 米"
+                ],
+                correct: 2 // C
+            },
+            {
+                id: 41,
+                question: "越南的丘陵地形有什么特点？",
+                options: [
+                    "A. 越往东越低",
+                    "B. 越往东越高",
+                    "C. 越往南越高",
+                    "D. 越往西越低"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 42,
+                question: "越南的平原面积占全国陆地总面积的多少？",
+                options: [
+                    "A. 三分之一",
+                    "B. 三分之二",
+                    "C. 四分之一",
+                    "D. 四分之三"
+                ],
+                correct: 2 // C
+            },
+            {
+                id: 43,
+                question: "越南南端有哪个面积广阔的三角洲？",
+                options: [
+                    "A. 湄公河三角洲",
+                    "B. 红河三角洲",
+                    "C. 黄河三角洲",
+                    "D. 长江三角洲"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 44,
+                question: "越南北端有哪个面积广阔的三角洲？",
+                options: [
+                    "A. 湄公河三角洲",
+                    "B. 红河三角洲",
+                    "C. 黄河三角洲",
+                    "D. 长江三角洲"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 45,
+                question: "红河三角洲的面积是多少？",
+                options: [
+                    "A. 1.65万平方公里",
+                    "B. 1.66 万平方公里",
+                    "C. 1.67 万平方公里",
+                    "D. 1.68 万平方公里"
+                ],
+                correct: 2 // C
+            },
+            {
+                id: 46,
+                question: "湄公河三角洲的面积是多少？",
+                options: [
+                    "A. 1万平方公里",
+                    "B. 2 万平方公里",
+                    "C. 3 万平方公里",
+                    "D. 4万平方公里"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 47,
+                question: "越南的地形面向东海的哪些方向？",
+                options: [
+                    "A. 东面、南面和西面",
+                    "B. 北面、南面和西面",
+                    "C. 北面、东面和南面",
+                    "D. 东面、西面和北面"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 48,
+                question: "越南从北端的芒街至西南端的河仙，海岸线长度是多少？",
+                options: [
+                    "A. 3250公里",
+                    "B. 3260 公里",
+                    "C. 3270 公里",
+                    "D. 3280 公里"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 49,
+                question: "属于越南主权的东海向哪些方向延伸？",
+                options: [
+                    "A. 西面及北面",
+                    "B. 西面及南面",
+                    "C. 东面及西北面",
+                    "D. 东面及东南面"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 50,
+                question: "下龙湾属于越南哪个海域？",
+                options: [
+                    "A. 北部湾",
+                    "B. 北中部湾",
+                    "C. 南部湾",
+                    "D. 东南部湾"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 51,
+                question: "越南全境约有多少座大小岛屿？",
+                options: [
+                    "A. 1000座",
+                    "B. 2000 座",
+                    "C. 3000 座",
+                    "D. 4000 座"
+                ],
+                correct: 2 // C
+            },
+            {
+                id: 52,
+                question: "越南东北部的东海地区有什么？",
+                options: [
+                    "A. 富国岛",
+                    "B. 下龙湾",
+                    "C. 黄沙群岛",
+                    "D. 长沙群岛"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 53,
+                question: "越南西南部有哪些岛屿？",
+                options: [
+                    "A. 白龙尾岛",
+                    "B. 吉海岛",
+                    "C. 富国岛",
+                    "D. 拜子龙岛"
+                ],
+                correct: 2 // C
+            },
+            {
+                id: 54,
+                question: "越南西南部和南部有哪些岛屿？",
+                options: [
+                    "A. 白龙尾岛，昆山群岛，吉海岛",
+                    "B. 吉海岛，白龙尾岛，富国岛",
+                    "C. 富国岛，吉海岛，土珠岛",
+                    "D. 富国岛，昆山群岛，土珠岛"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 55,
+                question: "越南最大的两个群岛是？",
+                options: [
+                    "A. 白龙尾岛和吉海岛",
+                    "B. 昆山群岛和黄沙群岛",
+                    "C. 长沙群岛和昆山群岛",
+                    "D. 黄沙群岛和长沙群岛"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 56,
+                question: "越南的黄沙群岛和长沙群岛位于哪个地区？",
+                options: [
+                    "A. 东海地区",
+                    "B. 北海地区",
+                    "C. 太平洋地区",
+                    "D. 印度洋地区"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 57,
+                question: "越南的气候属于哪种类型？",
+                options: [
+                    "A. 热带气候",
+                    "B. 干燥气候",
+                    "C. 潮湿气候",
+                    "D. 寒冷气候"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 58,
+                question: "越南的降雨主要集中在哪个季节？",
+                options: [
+                    "A. 春季",
+                    "B. 夏季",
+                    "C. 秋季",
+                    "D. 冬季"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 59,
+                question: "越南北部的气候受哪个国家的陆地气候影响？",
+                options: [
+                    "A. 老挝",
+                    "B. 柬埔寨",
+                    "C. 中国",
+                    "D. 日本"
+                ],
+                correct: 2 // C
+            },
+            {
+                id: 60,
+                question: "越南中部的气候受哪个国家的陆地气候影响？",
+                options: [
+                    "A. 老挝",
+                    "B. 柬埔寨",
+                    "C. 中国",
+                    "D. 日本"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 61,
+                question: "越南全年降雨量如何？",
+                options: [
+                    "A. 降雨量大，湿度高",
+                    "B. 降雨量大，湿度低",
+                    "C. 降雨量小，湿度高",
+                    "D. 降雨量小，湿度低"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 62,
+                question: "东海对越南陆地气候的影响是什么？",
+                options: [
+                    "A. 热带季风湿润气候",
+                    "B. 干燥湿热气候",
+                    "C. 干燥寒冷气候",
+                    "D. 季风湿润气候"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 63,
+                question: "越南气候受什么因素影响而变化？",
+                options: [
+                    "A. 受季节变化影响",
+                    "B. 受地域变化影响",
+                    "C. 受年度变化影响",
+                    "D. 受季节和地域变化影响"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 64,
+                question: "越南的气候可分为几个区域？",
+                options: [
+                    "A. 仅一个统一的区域",
+                    "B. 两个主要不同的区域",
+                    "C. 三个主要不同的区域",
+                    "D. 多个不同的区域"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 65,
+                question: "越南的气候可分为哪些区域？",
+                options: [
+                    "A. 北部和北中部",
+                    "B. 南部和南中部",
+                    "C. 北中部和南中部",
+                    "D. 北部、北中部、南部、南中部"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 66,
+                question: "越南北方气候的主要特点是什么？",
+                options: [
+                    "A. 湿润和干燥的春夏两季",
+                    "B. 寒冷和干燥的冬夏两季",
+                    "C. 湿润、湿热和寒冷的春夏冬三季",
+                    "D. 湿润、炎热干燥、凉爽和寒冷的春夏秋冬四季"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 67,
+                question: "越南南方气候的主要特点是什么？",
+                options: [
+                    "A. 只有旱季",
+                    "B. 只有雨季",
+                    "C. 旱季和雨季",
+                    "D. 寒季和雨季"
+                ],
+                correct: 2 // C
+            },
+            {
+                id: 68,
+                question: "越南老街省沙坝的气候独特是由于什么原因？",
+                options: [
+                    "A. 越南地形结构的不同",
+                    "B. 受中国大陆气候的影响",
+                    "C. 受老挝季风气候的影响",
+                    "D. 受东海热带季风湿润气候的影响"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 69,
+                question: "越南的年均气温大约是多少？",
+                options: [
+                    "A. 10℃ - 20℃",
+                    "B. 18℃ - 22℃",
+                    "C. 21℃ - 27℃",
+                    "D. 30℃ - 36℃"
+                ],
+                correct: 2 // C
+            },
+            {
+                id: 70,
+                question: "越南南部最热的月份是哪一个？",
+                options: [
+                    "A. 2月",
+                    "B. 4 月",
+                    "C. 8 月",
+                    "D. 10 月"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 71,
+                question: "越南北部最冷的月份是哪一个？",
+                options: [
+                    "A. 3月和4 月",
+                    "B. 6 月和7月",
+                    "C. 9 月和10月",
+                    "D. 12 月和次年1月"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 72,
+                question: "越南共产党成立于哪一年？",
+                options: [
+                    "A. 1911年5 月9日",
+                    "B. 1927年8月10日",
+                    "C. 1930 年2月3日",
+                    "D. 1931 年3月2日"
+                ],
+                correct: 2 // C
+            },
+            {
+                id: 73,
+                question: "越南共产党在 1945 年取得了什么胜利？",
+                options: [
+                    "A. 八月革命",
+                    "B. 十月革命",
+                    "C. 五月奠边府战役",
+                    "D. 四月三十日南方解放战役"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 74,
+                question: "1945 年9 月2 日，胡志明主席代表哪个组织宣读《独立宣言》？",
+                options: [
+                    "A. 越南国会",
+                    "B. 越南共产党中央",
+                    "C. 越南临时政府",
+                    "D. 越南人民群众"
+                ],
+                correct: 2 // C
+            },
+            {
+                id: 75,
+                question: "1945 年9 月2 日，胡志明主席在河内巴亭广场向全世界庄严宣告什么？",
+                options: [
+                    "A. 宣告成立越南社会主义共和国",
+                    "B. 宣告成立越南民主共和国",
+                    "C. 宣告成立越南独立共和国",
+                    "D. 宣告成立越南主义共和国"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 76,
+                question: "越南在哪一年几月几日举行全国普选，成立统一国会？",
+                options: [
+                    "A. 1974年2 月25日",
+                    "B. 1974 年2月26日",
+                    "C. 1976 年4月20日",
+                    "D. 1976 年4月25日"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 77,
+                question: "越南首都河内位于哪个地区？",
+                options: [
+                    "A. 红河三角洲的西北部",
+                    "B. 红河三角洲的东北部",
+                    "C. 湄公河三角洲的西南部",
+                    "D. 湄公河三角洲的东南部"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 78,
+                question: "根据 2019 年越南统计总局的数据，河内市的人口约为多少？",
+                options: [
+                    "A. 5,053,663人",
+                    "B. 6,053,663人",
+                    "C. 7,053,663 人",
+                    "D. 8,053,663 人"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 79,
+                question: "越南首都河内已有多少年历史？",
+                options: [
+                    "A. 百年",
+                    "B. 千年",
+                    "C. 万年",
+                    "D. 十万年"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 80,
+                question: "还剑湖位于河内的哪个地区？",
+                options: [
+                    "A. 西湖郡",
+                    "B. 巴亭郡",
+                    "C. 黄梅郡",
+                    "D. 还剑郡"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 81,
+                question: "公元 1010 年，李太祖迁都至新建城市，并将其命名为何？",
+                options: [
+                    "A. 文郎",
+                    "B. 欧罗",
+                    "C. 升龙",
+                    "D. 河内"
+                ],
+                correct: 2 // C
+            },
+            {
+                id: 82,
+                question: "升龙城何时正式更名为河内？",
+                options: [
+                    "A. 1830年",
+                    "B. 1831 年",
+                    "C. 1832 年",
+                    "D. 1833 年"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 83,
+                question: "越南国会何时正式确定河内为越南社会主义共和国的首都？",
+                options: [
+                    "A. 1976年 7月2日",
+                    "B. 1964 年8月2日",
+                    "C. 1968 年2月6日",
+                    "D. 1972 年5月10日"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 84,
+                question: "河内`三十六街坊`是对什么的称呼？",
+                options: [
+                    "A. 当年繁华的升龙",
+                    "B. 当年繁华的东京",
+                    "C. 当年繁华的河内",
+                    "D. 当年繁华的东都"
+                ],
+                correct: 2 // C
+            },
+            {
+                id: 85,
+                question: "河内古街区的共同特点是什么？",
+                options: [
+                    "A. 每个民区名称都冠以`行`字",
+                    "B. 每条街道名称都冠以`行`字",
+                    "C. 每个店铺名称都冠以`行`字",
+                    "D. 每个住户名称都冠以`行`字"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 86,
+                question: "河内古街区的整体氛围如何？",
+                options: [
+                    "A. 繁华热闹",
+                    "B. 安静祥和",
+                    "C. 空荡无人",
+                    "D. 冷清萧条"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 87,
+                question: "还剑湖在河内的地位如何？",
+                options: [
+                    "A. 河内市最大的湖泊",
+                    "B. 河内市最深的湖泊",
+                    "C. 河内市最小的湖泊",
+                    "D. 河内市最著名的湖泊"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 88,
+                question: "还剑湖的面积约为多少？",
+                options: [
+                    "A. 10公顷",
+                    "B. 11 公顷",
+                    "C. 12 公顷",
+                    "D. 13 公顷"
+                ],
+                correct: 2 // C
+            },
+            {
+                id: 89,
+                question: "还剑湖中的小岛上建有什么建筑物？",
+                options: [
+                    "A. 龟塔",
+                    "B. 石像",
+                    "C. 古树",
+                    "D. 纪念碑"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 90,
+                question: "玉山祠建于还剑湖的什么位置？",
+                options: [
+                    "A. 湖岸边",
+                    "B. 湖底",
+                    "C. 湖中央的一座小岛上",
+                    "D. 湖边山上"
+                ],
+                correct: 2 // C
+            },
+            {
+                id: 91,
+                question: "传说中，黎太祖推翻明朝统治后将神剑如何处理？",
+                options: [
+                    "A. 扔入湖中",
+                    "B. 随身携带",
+                    "C. 归还神龟",
+                    "D. 交给他的将军"
+                ],
+                correct: 2 // C
+            },
+            {
+                id: 92,
+                question: "河内一月份的平均气温大约是多少？",
+                options: [
+                    "A. 12.6摄氏度",
+                    "B. 15.6 摄氏度",
+                    "C. 18.6 摄氏度",
+                    "D. 22.6 摄氏度"
+                ],
+                correct: 2 // C
+            },
+            {
+                id: 93,
+                question: "河内七月份的平均气温大约是多少？",
+                options: [
+                    "A. 18.1摄氏度",
+                    "B. 28.1 摄氏度",
+                    "C. 38.1 摄氏度",
+                    "D. 48.1 摄氏度"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 94,
+                question: "公元 1010 年，李太祖从何地迁都至升龙？",
+                options: [
+                    "A. 峰州（富寿）",
+                    "B. 华闾（宁平）",
+                    "C. 顺华（承天）",
+                    "D. 迷岭（永福）"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 95,
+                question: "哪个朝代扩建了升龙城并设立东宫？",
+                options: [
+                    "A. 李朝",
+                    "B. 陈朝",
+                    "C. 黎朝",
+                    "D. 阮朝"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 96,
+                question: "哪个朝代将升龙称为东都、东京？",
+                options: [
+                    "A. 李朝",
+                    "B. 陈朝",
+                    "C. 黎朝",
+                    "D. 阮朝"
+                ],
+                correct: 2 // C
+            },
+            {
+                id: 97,
+                question: "哪个朝代将升龙更名为河内？",
+                options: [
+                    "A. 李朝",
+                    "B. 陈朝",
+                    "C. 黎朝",
+                    "D. 阮朝"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 98,
+                question: "升龙城在哪一年正式更名为河内？",
+                options: [
+                    "A. 1830年",
+                    "B. 1831 年",
+                    "C. 1832 年",
+                    "D. 1833 年"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 99,
+                question: "西湖曾被称为什么名称？",
+                options: [
+                    "A. 金牛湖",
+                    "B. 天光湖",
+                    "C. 七亩湖",
+                    "D. 竹白湖"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 100,
+                question: "西湖的总面积约为多少？",
+                options: [
+                    "A. 300公顷",
+                    "B. 400 公顷",
+                    "C. 500公顷",
+                    "D. 600 公顷"
+                ],
+                correct: 2 // C
+            },
+            {
+                id: 101,
+                question: "西湖拥有哪座著名的寺庙？",
+                options: [
+                    "A. 独柱寺",
+                    "B. 镇国寺",
+                    "C. 福庆寺",
+                    "D. 法云寺"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 102,
+                question: "可以说巴亭广场是怎样的地方？",
+                options: [
+                    "A. 越南的心脏",
+                    "B. 河内的心脏",
+                    "C. 还剑湖的心脏",
+                    "D. 巴亭区的心脏"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 103,
+                question: "巴亭广场与哪位领袖相关？",
+                options: [
+                    "A. 越南国家现任主席",
+                    "B. 越南国家现任总理",
+                    "C. 越南国家胡志明主席",
+                    "D. 越南旧时阮朝皇帝"
+                ],
+                correct: 2 // C
+            },
+            {
+                id: 104,
+                question: "1945 年 9月 2日，胡志明主席在巴亭广场宣读了什么？",
+                options: [
+                    "A. 越南《独立宣言》",
+                    "B. 成立越南共和国",
+                    "C. 河内正式解放",
+                    "D. 越南全国解放"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 105,
+                question: "巴亭广场在哪个时期进行了扩建？",
+                options: [
+                    "A. 20世纪 60年代",
+                    "B. 20 世纪70年代",
+                    "C. 20 世纪80年代",
+                    "D. 20 世纪90年代"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 106,
+                question: "胡志明主席遗迹区包括哪些建筑？",
+                options: [
+                    "A. 陵寝、高脚屋和展览馆",
+                    "B. 陵寝、独柱寺和博物馆",
+                    "C. 独柱寺、高脚屋和博物馆",
+                    "D. 陵寝、高脚屋和博物馆"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 107,
+                question: "巴亭广场位于河内的哪个区域？",
+                options: [
+                    "A. 美亭区",
+                    "B. 还剑区",
+                    "C. 西湖区",
+                    "D. 巴亭区"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 108,
+                question: "胡志明主席陵墓后面是什么地方？",
+                options: [
+                    "A. `高脚屋`区",
+                    "B. 胡志明博物馆",
+                    "C. 巴亭广场",
+                    "D. 独柱寺"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 109,
+                question: "胡志明主席居住的高脚屋采用哪种传统建筑风格？",
+                options: [
+                    "A. 越南北部山区民族风格",
+                    "B. 越南南部各民族风格",
+                    "C. 越南西原山区民族风格",
+                    "D. 越南北部三角洲民族风格"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 110,
+                question: "胡志明主席高脚屋的下层是什么用途？",
+                options: [
+                    "A. 办公室",
+                    "B. 会客室",
+                    "C. 卧室",
+                    "D. 厨房"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 111,
+                question: "升龙皇城中心遗迹区的面积约为多少？",
+                options: [
+                    "A. 1.5000 平方米",
+                    "B. 1.8000平方米",
+                    "C. 1.9000平方米",
+                    "D. 2.0000平方米"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 112,
+                question: "升龙皇城位于河内的哪个街道？",
+                options: [
+                    "A. 黄耀路18号",
+                    "B. 黄耀路19号",
+                    "C. 黄耀路20号",
+                    "D. 黄耀路 21号"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 113,
+                question: "升龙皇城最早建于哪个朝代？",
+                options: [
+                    "A. 阮初",
+                    "B. 青初",
+                    "C. 黎初",
+                    "D. 黎末"
+                ],
+                correct: 2 // C
+            },
+            {
+                id: 114,
+                question: "在阮朝时期，河内城遗迹中仍存留哪些建筑？",
+                options: [
+                    "A. 东门和旗台",
+                    "B. 西门和旗台",
+                    "C. 南门和旗台",
+                    "D. 北门和旗台"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 115,
+                question: "升龙皇城的法军炮兵指挥所建于哪个时期？",
+                options: [
+                    "A. 18世纪初",
+                    "B. 18 世纪末",
+                    "C. 19 世纪初",
+                    "D. 19 世纪末"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 116,
+                question: "升龙皇城具有何种特别的历史价值？",
+                options: [
+                    "A. `地下古街 - 河内`",
+                    "B. `地上升龙 - 河内`",
+                    "C. `地下升龙 - 河内`",
+                    "D. `地下皇城 - 河内`"
+                ],
+                correct: 2 // C
+            },
+            {
+                id: 117,
+                question: "在升龙皇城遗迹区的端门、北门、后楼脚下附近发现了哪个朝代的遗迹和遗物？",
+                options: [
+                    "A. 黎朝、陈朝",
+                    "B. 李朝、陈朝",
+                    "C. 阮朝、陈朝",
+                    "D. 李朝、黎朝"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 118,
+                question: "升龙前期和升龙时期的遗产群是在哪个时间段被发掘的？",
+                options: [
+                    "A. 2000年 12月至2002年",
+                    "B. 2001 年12月至2003 年",
+                    "C. 2002 年12月至2003 年",
+                    "D. 2002 年12月至2004年"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 119,
+                question: "2004 年后，升龙皇城遗迹区的发掘面积被扩大到多少？",
+                options: [
+                    "A. 33000平方米",
+                    "B. 34000 平方米",
+                    "C. 35000 平方米",
+                    "D. 36000 平方米"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 120,
+                question: "升龙-河内皇城中心遗迹区在哪一年被列入世界文化遗产名录？",
+                options: [
+                    "A. 2000年",
+                    "B. 2005 年",
+                    "C. 2008 年",
+                    "D. 2010 年"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 121,
+                question: "下龙湾位于越南广宁省的哪个城市？",
+                options: [
+                    "A. 翁碧市",
+                    "B. 下龙市",
+                    "C. 锦普市",
+                    "D. 芒街市"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 122,
+                question: "目前下龙湾的名字是从何而来的？",
+                options: [
+                    "A. 起源于远古的传说故事",
+                    "B. 由第十代王雄定名而成",
+                    "C. 由古代本地人向神龙崇拜",
+                    "D. 由此地的地形象龙"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 123,
+                question: "下龙市在越南旅游业发达的城市中排名第几位？",
+                options: [
+                    "A. 第一位",
+                    "B. 第二位",
+                    "C. 第三位",
+                    "D. 第四位"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 124,
+                question: "下龙市独立分开的两个部分为何名？",
+                options: [
+                    "A. 下龙和拜寨",
+                    "B. 下龙和鸿基",
+                    "C. 鸿基和锦普",
+                    "D. 拜寨和鸿基"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 125,
+                question: "下龙市的大部分旅店、服务业和纪念品店集中在哪个区域？",
+                options: [
+                    "A. 鸿基区",
+                    "B. 拜寨区",
+                    "C. 鸿基与拜寨两个地区",
+                    "D. 其他地区"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 126,
+                question: "来下龙湾旅游的外国游客大多数喜欢的活动是什么？",
+                options: [
+                    "A. 到拜寨区的海滨浴场游泳",
+                    "B. 乘船出海游览、上岛观光",
+                    "C. 到海湾边的一些餐厅吃海鲜",
+                    "D. 到下龙市的商店购买纪念品"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 127,
+                question: "下龙湾在哪一年被联合国教科文组织列为世界自然遗产？",
+                options: [
+                    "A. 1993年",
+                    "B. 1994 年",
+                    "C. 1995 年",
+                    "D. 1996 年"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 128,
+                question: "2000 年，越南下龙湾的哪一方面被认可具有地貌和地质价值？",
+                options: [
+                    "A. 所有自然岩洞",
+                    "B. 自然风景的画展室",
+                    "C. 人类非物质文化的博物馆",
+                    "D. 地球演变过程的天然博物馆"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 129,
+                question: "越南下龙湾的总面积是多少？",
+                options: [
+                    "A. 1520平方公里",
+                    "B. 1530 平方公里",
+                    "C. 1540 平方公里",
+                    "D. 1550 平方公里"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 130,
+                question: "越南下龙湾共有多少个岛屿？",
+                options: [
+                    "A. 1949个",
+                    "B. 1959 个",
+                    "C. 1969 个",
+                    "D. 1979 个"
+                ],
+                correct: 2 // C
+            },
+            {
+                id: 131,
+                question: "越南宁平市位于河内以南约多少公里？",
+                options: [
+                    "A. 110公里",
+                    "B. 120 公里",
+                    "C. 130 公里",
+                    "D. 140 公里"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 132,
+                question: "宁平市区西部古时称为何名？",
+                options: [
+                    "A. 升龙",
+                    "B. 华闾",
+                    "C. 顺化",
+                    "D. 长安"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 133,
+                question: "宁平省华闾古都在历史上经历了哪个时期？",
+                options: [
+                    "A. 10至11 世纪",
+                    "B. 11 至12世纪",
+                    "C. 12 至13世纪",
+                    "D. 13 至14世纪"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 134,
+                question: "宁平省华闾古都曾经历过哪些朝代？",
+                options: [
+                    "A. 阮朝、前黎朝",
+                    "B. 陈朝、前黎朝",
+                    "C. 李朝、前黎朝",
+                    "D. 丁朝、前黎朝"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 135,
+                question: "宁平省的气温在三十度以下的月份范围是什么？",
+                options: [
+                    "A. 11月至次年 5月",
+                    "B. 11 月至次年7月",
+                    "C. 12 月至次年5月",
+                    "D. 12 月至次年8月"
+                ],
+                correct: 2 // C
+            },
+            {
+                id: 136,
+                question: "如果你想到宁平观赏盛开的荷花，最好的时间是什么时候？",
+                options: [
+                    "A. 1月份",
+                    "B. 3 月份",
+                    "C. 6 月份",
+                    "D. 9月份"
+                ],
+                correct: 2 // C
+            },
+            {
+                id: 137,
+                question: "宁平省长安生态旅游区位于哪里？",
+                options: [
+                    "A. 宁平省东北部",
+                    "B. 宁平省东南部",
+                    "C. 宁平省西北部",
+                    "D. 宁平省西南部"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 138,
+                question: "宁平省长安生态旅游区距离华闾古都遗址多远？",
+                options: [
+                    "A. 1公里",
+                    "B. 2 公里",
+                    "C. 3 公里",
+                    "D. 4公里"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 139,
+                question: "宁平省长安生态旅游区的总面积是多少？",
+                options: [
+                    "A. 1168公顷",
+                    "B. 2168 公顷",
+                    "C. 3168 公顷",
+                    "D. 4168 公顷"
+                ],
+                correct: 2 // C
+            },
+            {
+                id: 140,
+                question: "宁平省长安风景区包括哪些部分？",
+                options: [
+                    "A. 仅长安生态区",
+                    "B. 长安生态区和三谷碧洞区",
+                    "C. 长安生态区、三谷碧洞区和华闾古都区",
+                    "D. 长安生态区、三谷碧洞区、华闾古都区和法焰石寺"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 141,
+                question: "宁平省长安群体风景区被人们称为何名？",
+                options: [
+                    "A. 水上下龙湾",
+                    "B. 陆上下龙湾",
+                    "C. 天下第一古城",
+                    "D. 陆上自然博物馆"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 142,
+                question: "宁平省长安群体风景区也被人们称为何名？",
+                options: [
+                    "A. 露天自然博物馆",
+                    "B. 露天地质博物馆",
+                    "C. 陆上自然博物馆",
+                    "D. 陆上地质博物馆"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 143,
+                question: "在宁平省旅游业发展规划中，长安生态区共有几条水上旅游线路？",
+                options: [
+                    "A. 7条",
+                    "B. 8 条",
+                    "C. 9 条",
+                    "D. 10 条"
+                ],
+                correct: 2 // C
+            },
+            {
+                id: 144,
+                question: "宁平省长安风景区管理委员会已向联合国教科文组织申请将长安风景区列为何地？",
+                options: [
+                    "A. 世界自然与文化双重遗产",
+                    "B. 世界历史与文化双重遗产",
+                    "C. 世界自然与历史双重遗产",
+                    "D. 世界自然与传统双重遗产"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 145,
+                question: "可以说，越南宁平省长安遗迹区是什么类型的旅游景点？",
+                options: [
+                    "A. 历史文化和生态旅游点",
+                    "B. 历史文化和古迹旅游点",
+                    "C. 历史文化和传统旅游点",
+                    "D. 历史文化和度假旅游点"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 146,
+                question: "顺化市位于越南的哪个省？",
+                options: [
+                    "A. 广平省",
+                    "B. 广南省",
+                    "C. 承天-顺化省",
+                    "D. 乂安省"
+                ],
+                correct: 2 // C
+            },
+            {
+                id: 147,
+                question: "承天-顺化省顺化市距离河内多远？",
+                options: [
+                    "A. 354公里",
+                    "B. 454 公里",
+                    "C. 554 公里",
+                    "D. 654 公里"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 148,
+                question: "承天-顺化省顺化市距离胡志明市多远？",
+                options: [
+                    "A. 一千多公里",
+                    "B. 两千多公里",
+                    "C. 三千多公里",
+                    "D. 四千多公里"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 149,
+                question: "越南顺化市是哪个朝代的古都？",
+                options: [
+                    "A. 黎朝",
+                    "B. 陈朝",
+                    "C. 阮朝",
+                    "D. 李朝"
+                ],
+                correct: 2 // C
+            },
+            {
+                id: 150,
+                question: "越南顺化皇城修建在何处？",
+                options: [
+                    "A. 红江岸边的狭长高原上",
+                    "B. 红江岸边的狭长平原上",
+                    "C. 香江岸边的狭长高原上",
+                    "D. 香江岸边的狭长平原上"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 151,
+                question: "顺化古建筑群被列入何种遗产名录？",
+                options: [
+                    "A. 世界文化遗产",
+                    "B. 世界自然遗产",
+                    "C. 世界文化与自然遗产",
+                    "D. 世界非物质文化遗产"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 152,
+                question: "顺化城有哪些著名名胜古迹？",
+                options: [
+                    "A. 皇城、皇陵、天姥寺塔",
+                    "B. 升龙城、皇陵、龟塔",
+                    "C. 皇城、皇陵、国子监文庙",
+                    "D. 皇城、西湖、天姥寺塔"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 153,
+                question: "岘港至顺化一带被美国《国家地理》杂志评为何地？",
+                options: [
+                    "A. \"一生中必须看一次的40个地方之一\"",
+                    "B. \"一生中必须看一次的 50个地方之一\"",
+                    "C. \"一生中必须看一次的 60个地方之一\"",
+                    "D. \"一生中必须看一次的 70个地方之一\""
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 154,
+                question: "越南顺化皇城还被称为何名？",
+                options: [
+                    "A. 大城",
+                    "B. 皇宫",
+                    "C. 大内",
+                    "D. 大宫"
+                ],
+                correct: 2 // C
+            },
+            {
+                id: 155,
+                question: "越南顺化的天姥寺在哪一年首次修葺？",
+                options: [
+                    "A. 1662年",
+                    "B. 1663 年",
+                    "C. 1664 年",
+                    "D. 1665 年"
+                ],
+                correct: 2 // C
+            },
+            {
+                id: 156,
+                question: "越南顺化皇城被联合国教科文组织列为何种遗产？",
+                options: [
+                    "A. 世界文化遗产",
+                    "B. 世界自然遗产",
+                    "C. 国家文化遗产",
+                    "D. 国家自然遗产"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 157,
+                question: "越南顺化皇城坐落在哪条河流的岸边？",
+                options: [
+                    "A. 红江",
+                    "B. 香江",
+                    "C. 韩江",
+                    "D. 九龙江"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 158,
+                question: "越南顺化皇城的城墙高度是多少？",
+                options: [
+                    "A. 6米",
+                    "B. 7 米",
+                    "C. 8 米",
+                    "D. 9米"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 159,
+                question: "越南顺化皇城的城墙厚度是多少？",
+                options: [
+                    "A. 5米",
+                    "B. 10 米",
+                    "C. 15 米",
+                    "D. 20 米"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 160,
+                question: "越南顺化皇城共有几座城门？",
+                options: [
+                    "A. 4座",
+                    "B. 5 座",
+                    "C. 6 座",
+                    "D. 7座"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 161,
+                question: "越南顺化皇城的每座城门约有多高？",
+                options: [
+                    "A. 约12米",
+                    "B. 约16米",
+                    "C. 约18米",
+                    "D. 约 20米"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 162,
+                question: "越南顺化皇城建于哪个世纪？",
+                options: [
+                    "A. 17世纪",
+                    "B. 18世纪",
+                    "C. 19 世纪",
+                    "D. 20 世纪"
+                ],
+                correct: 2 // C
+            },
+            {
+                id: 163,
+                question: "越南顺化皇城是哪一朝代的皇宫？",
+                options: [
+                    "A. 黎朝",
+                    "B. 陈朝",
+                    "C. 吴朝",
+                    "D. 阮朝"
+                ],
+                correct: 2 // C
+            },
+            {
+                id: 164,
+                question: "越南顺化皇城内共有几个部区？",
+                options: [
+                    "A. 六部区",
+                    "B. 七部区",
+                    "C. 八部区",
+                    "D. 九部区"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 165,
+                question: "越南顺化皇城的紫禁城内分为几个部分？",
+                options: [
+                    "A. 两部分",
+                    "B. 三部分",
+                    "C. 四部分",
+                    "D. 五部分"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 166,
+                question: "越南顺化皇城紫禁城的前部是什么地方？",
+                options: [
+                    "A. 皇帝居住的干成殿",
+                    "B. 皇帝平时处理政务的勤政殿",
+                    "C. 皇后居住的坤泰宫",
+                    "D. 皇太子居住的光明殿"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 167,
+                question: "越南顺化皇城紫禁城的后部是什么地方？",
+                options: [
+                    "A. 皇后居住的坤泰宫",
+                    "B. 皇太子居住的光明殿",
+                    "C. 皇帝居住的干成殿",
+                    "D. 皇帝平时处理政务的勤政殿"
+                ],
+                correct: 2 // C
+            },
+            {
+                id: 168,
+                question: "越南顺化市的天姥寺位于何处？",
+                options: [
+                    "A. 顺化城东郊香江江畔",
+                    "B. 顺化城南郊香江江畔",
+                    "C. 顺化城北郊香江江畔",
+                    "D. 顺化城西郊香江江畔"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 169,
+                question: "越南顺化市的天姥寺已有多少年历史？",
+                options: [
+                    "A. 近400年",
+                    "B. 近500年",
+                    "C. 近600年",
+                    "D. 近 700年"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 170,
+                question: "越南顺化市的天姥寺内约有多少座金碧辉煌的建筑？",
+                options: [
+                    "A. 数十座",
+                    "B. 数百座",
+                    "C. 数千座",
+                    "D. 数万座"
+                ],
+                correct: 0 // A
+            },
+            {
+                id: 171,
+                question: "大叻是越南哪个省的省会?",
+                options: [
+                    "A. 林安省",
+                    "B. 林同省",
+                    "C. 平定省",
+                    "D. 广南省"
+                ],
+                correct: 2 // C
+            },
+            {
+                id: 172,
+                question: "大叻的年平均气温大约是多少?",
+                options: [
+                    "A. 10°C",
+                    "B. 17°C",
+                    "C. 23°C",
+                    "D. 30°C"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 173,
+                question: "大叻被称为 \"万花之城\"，以下哪种花在当地可以见到？",
+                options: [
+                    "A. 樱花",
+                    "B. 雄菊",
+                    "C. 太阳花",
+                    "D. 茉莉花"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 174,
+                question: "在大叻市区可以游览的景点不包括以下哪一项?",
+                options: [
+                    "A. 春香湖",
+                    "B. 芽庄湾",
+                    "C. 情人谷",
+                    "D. 千鲤瀑布"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 175,
+                question: "在情人谷可以看到什么有趣的表演?",
+                options: [
+                    "A. 龙舟比赛",
+                    "B. 马术表演",
+                    "C. 水上木偶戏",
+                    "D. 越南传统歌舞"
+                ],
+                correct: 2 // C
+            },
+            {
+                id: 176,
+                question: "大功花圃位于哪个地方？",
+                options: [
+                    "A. 市郊",
+                    "B. 市中心",
+                    "C. 情人谷",
+                    "D. 春香湖畔"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 177,
+                question: "春香湖的面积大约是多少?",
+                options: [
+                    "A. 3 平方公里",
+                    "B. 5 平方公里",
+                    "C. 7 平方公里",
+                    "D. 10 平方公里"
+                ],
+                correct: 2 // C
+            },
+            {
+                id: 178,
+                question: "在大功花圃中，可以看到哪些美丽的景象？",
+                options: [
+                    "A. 农田",
+                    "B. 野生动物",
+                    "C. 山脉和湖泊",
+                    "D. 奇花异草，争奇斗艳"
+                ],
+                correct: 1 // B
+            },
+            {
+                id: 179,
+                question: "春香湖附近的天主教堂有什么特点？",
+                options: [
+                    "A. 端庄优雅",
+                    "B. 建筑现代",
+                    "C. 彩色玻璃窗",
+                    "D. 巨大钟塔"
+                ],
+                correct: 3 // D
+            },
+            {
+                id: 180,
+                question: "春香湖是游客的什么重要区域？",
+                options: [
+                    "A. 购物区",
+                    "B. 娱乐区",
+                    "C. 文化活动区",
+                    "D. 住宿和用餐的主要区域"
+                ],
+                correct: 0 // A
+            }
+        ];
+
+        let userAnswers = {};
+        let totalQuestions = questions.length;
+        let showOnlyWrongAnswers = false;
+        let wrongQuestionIndices = [];
+
+        // Khởi tạo quiz
+        function initQuiz() {
+            renderAllQuestions();
+            updateProgress();
+        }
+
+        // Lấy danh sách câu hỏi cần hiển thị
+        function getQuestionsToShow() {
+            if (showOnlyWrongAnswers && wrongQuestionIndices.length > 0) {
+                return wrongQuestionIndices.map(index => ({
+                    originalIndex: index,
+                    question: questions[index]
+                }));
+            }
+            return questions.map((question, index) => ({
+                originalIndex: index,
+                question: question
+            }));
+        }
+
+        // Hiển thị tất cả câu hỏi
+        function renderAllQuestions() {
+            const container = document.getElementById('questionsContainer');
+            const questionsToShow = getQuestionsToShow();
+
+            container.innerHTML = questionsToShow.map((item, displayIndex) => {
+                const index = item.originalIndex;
+                const question = item.question;
+                const userAnswer = userAnswers[index];
+                const isAnswered = userAnswer !== undefined;
+                const isCorrect = isAnswered && userAnswer === question.correct;
+
+                return `
+                    <div class="question-card" data-question-index="${index}">
+                        <div class="question-number">Câu ${question.id}</div>
+                        <div class="question-text">${question.question}</div>
+                        <div class="options">
+                            ${question.options.map((option, optIndex) => {
+                    let optionClass = '';
+                    if (isAnswered) {
+                        if (optIndex === question.correct) {
+                            optionClass = 'show-correct';
+                        } else if (optIndex === userAnswer && !isCorrect) {
+                            optionClass = 'incorrect';
+                        } else if (optIndex === userAnswer && isCorrect) {
+                            optionClass = 'correct selected';
+                        }
+                    } else if (userAnswer === optIndex) {
+                        optionClass = 'selected';
+                    }
+
+                    return `
+                                    <div class="option ${optionClass}" 
+                                         onclick="${!isAnswered ? `selectAnswer(${index}, ${optIndex})` : ''}"
+                                         style="${isAnswered ? 'cursor: default;' : ''}">
+                                        <input type="radio" 
+                                               name="question${index}" 
+                                               id="option${index}_${optIndex}" 
+                                               value="${optIndex}"
+                                               ${userAnswer === optIndex ? 'checked' : ''}
+                                               ${isAnswered ? 'disabled' : ''}
+                                               onchange="${!isAnswered ? `selectAnswer(${index}, ${optIndex})` : ''}">
+                                        <label class="option-label" for="option${index}_${optIndex}" 
+                                               style="${isAnswered ? 'cursor: default;' : ''}">${option}</label>
+                                    </div>
+                                `;
+                }).join('')}
+                        </div>
+                        ${isAnswered ? `
+                            <div class="answer-feedback ${isCorrect ? 'correct' : 'incorrect'} show">
+                                ${isCorrect ? '✓ Đúng!' : '✗ Sai!'}
+                            </div>
+                            ${!isCorrect ? `
+                                <div class="correct-answer-label">
+                                    Đáp án đúng: ${question.options[question.correct]}
+                                </div>
+                            ` : ''}
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+
+            updateQuestionCounter();
+        }
+
+        // Cập nhật chỉ một câu hỏi (tránh nháy màn hình)
+        function updateQuestionCard(questionIndex) {
+            const question = questions[questionIndex];
+            const userAnswer = userAnswers[questionIndex];
+            const isAnswered = userAnswer !== undefined;
+            const isCorrect = isAnswered && userAnswer === question.correct;
+
+            const questionCard = document.querySelector(`[data-question-index="${questionIndex}"]`);
+            if (!questionCard) return;
+
+            const optionsContainer = questionCard.querySelector('.options');
+            const existingFeedback = questionCard.querySelector('.answer-feedback');
+            const existingCorrectLabel = questionCard.querySelector('.correct-answer-label');
+
+            // Cập nhật các option
+            optionsContainer.innerHTML = question.options.map((option, optIndex) => {
+                let optionClass = '';
+                if (isAnswered) {
+                    if (optIndex === question.correct) {
+                        optionClass = 'show-correct';
+                    } else if (optIndex === userAnswer && !isCorrect) {
+                        optionClass = 'incorrect';
+                    } else if (optIndex === userAnswer && isCorrect) {
+                        optionClass = 'correct selected';
+                    }
+                } else if (userAnswer === optIndex) {
+                    optionClass = 'selected';
+                }
+
+                return `
+                    <div class="option ${optionClass}" 
+                         onclick="${!isAnswered ? `selectAnswer(${questionIndex}, ${optIndex})` : ''}"
+                         style="${isAnswered ? 'cursor: default;' : ''}">
+                        <input type="radio" 
+                               name="question${questionIndex}" 
+                               id="option${questionIndex}_${optIndex}" 
+                               value="${optIndex}"
+                               ${userAnswer === optIndex ? 'checked' : ''}
+                               ${isAnswered ? 'disabled' : ''}
+                               onchange="${!isAnswered ? `selectAnswer(${questionIndex}, ${optIndex})` : ''}">
+                        <label class="option-label" for="option${questionIndex}_${optIndex}" 
+                               style="${isAnswered ? 'cursor: default;' : ''}">${option}</label>
+                    </div>
+                `;
+            }).join('');
+
+            // Cập nhật feedback
+            if (isAnswered) {
+                if (!existingFeedback) {
+                    const feedback = document.createElement('div');
+                    feedback.className = `answer-feedback ${isCorrect ? 'correct' : 'incorrect'} show`;
+                    feedback.textContent = isCorrect ? '✓ Đúng!' : '✗ Sai!';
+                    optionsContainer.parentNode.insertBefore(feedback, optionsContainer.nextSibling);
+                } else {
+                    existingFeedback.className = `answer-feedback ${isCorrect ? 'correct' : 'incorrect'} show`;
+                    existingFeedback.textContent = isCorrect ? '✓ Đúng!' : '✗ Sai!';
+                }
+
+                if (!isCorrect) {
+                    if (!existingCorrectLabel) {
+                        const correctLabel = document.createElement('div');
+                        correctLabel.className = 'correct-answer-label';
+                        correctLabel.textContent = `Đáp án đúng: ${question.options[question.correct]}`;
+                        const feedback = questionCard.querySelector('.answer-feedback');
+                        feedback.parentNode.insertBefore(correctLabel, feedback.nextSibling);
+                    }
+                } else if (existingCorrectLabel) {
+                    existingCorrectLabel.remove();
+                }
+            }
+        }
+
+        // Chọn đáp án
+        function selectAnswer(questionIndex, answerIndex) {
+            userAnswers[questionIndex] = answerIndex;
+            updateQuestionCard(questionIndex);
+            updateProgress();
+            updateQuestionCounter();
+        }
+
+        // Cập nhật thanh tiến trình
+        function updateProgress() {
+            if (showOnlyWrongAnswers) {
+                const questionsToShow = getQuestionsToShow();
+                const answeredInWrong = questionsToShow.filter(item =>
+                    userAnswers[item.originalIndex] !== undefined
+                ).length;
+                const progress = questionsToShow.length > 0
+                    ? (answeredInWrong / questionsToShow.length) * 100
+                    : 0;
+                document.getElementById('progressFill').style.width = progress + '%';
+            } else {
+                const answeredCount = Object.keys(userAnswers).length;
+                const progress = (answeredCount / totalQuestions) * 100;
+                document.getElementById('progressFill').style.width = progress + '%';
+            }
+        }
+
+        // Cập nhật số câu đã trả lời
+        function updateQuestionCounter() {
+            const answeredCount = Object.keys(userAnswers).length;
+            const questionsToShow = getQuestionsToShow();
+            const displayCount = questionsToShow.length;
+
+            if (showOnlyWrongAnswers) {
+                document.getElementById('questionCounter').textContent =
+                    `Đang làm lại: ${displayCount} câu sai (Đã trả lời: ${answeredCount} / ${totalQuestions} câu hỏi)`;
+            } else {
+                document.getElementById('questionCounter').textContent =
+                    `Đã trả lời: ${answeredCount} / ${totalQuestions} câu hỏi`;
+            }
+        }
+
+        // Hiển thị kết quả
+        function showResults() {
+            let correctCount = 0;
+            let reviewHTML = '';
+
+            questions.forEach((question, index) => {
+                const userAnswer = userAnswers[index];
+                const isCorrect = userAnswer === question.correct;
+
+                if (isCorrect) {
+                    correctCount++;
+                }
+
+                reviewHTML += `
+                    <div class="review-item">
+                        <div class="review-question">
+                            Câu ${question.id}: ${question.question}
+                        </div>
+                        <div class="review-answer ${isCorrect ? 'correct' : 'incorrect'}">
+                            Đáp án của bạn: ${userAnswer !== undefined ? question.options[userAnswer] : 'Chưa trả lời'}
+                        </div>
+                        <div class="review-answer correct">
+                            Đáp án đúng: ${question.options[question.correct]}
+                        </div>
+                    </div>
+                `;
+            });
+
+            const score = Math.round((correctCount / totalQuestions) * 100);
+
+            document.getElementById('quizContainer').style.display = 'none';
+            document.getElementById('resultsContainer').classList.add('show');
+            document.getElementById('scoreDisplay').textContent = `${correctCount} / ${totalQuestions}`;
+            document.getElementById('scoreInfo').textContent =
+                `Bạn đã trả lời đúng ${correctCount} câu trong tổng số ${totalQuestions} câu (${score}%)`;
+            document.getElementById('reviewSection').innerHTML = reviewHTML;
+        }
+
+        // Lấy danh sách các câu hỏi đã trả lời sai
+        function getWrongQuestionIndices() {
+            const wrongIndices = [];
+            questions.forEach((question, index) => {
+                const userAnswer = userAnswers[index];
+                if (userAnswer !== undefined && userAnswer !== question.correct) {
+                    wrongIndices.push(index);
+                }
+            });
+            return wrongIndices;
+        }
+
+        // Làm lại chỉ các câu sai
+        function restartQuiz() {
+            wrongQuestionIndices = getWrongQuestionIndices();
+
+            if (wrongQuestionIndices.length === 0) {
+                alert('Bạn chưa có câu nào trả lời sai!');
+                return;
+            }
+
+            // Xóa đáp án của các câu sai để làm lại
+            wrongQuestionIndices.forEach(index => {
+                delete userAnswers[index];
+            });
+
+            showOnlyWrongAnswers = true;
+            document.getElementById('quizContainer').style.display = 'block';
+            document.getElementById('resultsContainer').classList.remove('show');
+            initQuiz();
+        }
+
+        // Làm lại từ đầu (reset toàn bộ)
+        function restartFromBeginning() {
+            userAnswers = {};
+            showOnlyWrongAnswers = false;
+            wrongQuestionIndices = [];
+            document.getElementById('quizContainer').style.display = 'block';
+            document.getElementById('resultsContainer').classList.remove('show');
+            initQuiz();
+        }
+
+        // Khởi động khi trang được tải
+        window.onload = function () {
+            initQuiz();
+        };
+    </script>
+</body>
+
+</html>
